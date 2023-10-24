@@ -3,10 +3,11 @@ import styled from "styled-components";
 export const BannerContainer = styled.div`
   display: flex;
   gap: 3.5rem;
+
+  margin: 5.75rem 0;
 `
 
 export const BannerContent = styled.div`
-  max-width: 588px;
   h1{
     font-family: 'Baloo 2', sans-serif;
     font-size: 3rem;

@@ -23,4 +23,16 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: 400;
     font-size: 1rem;
   }
+
+  h1{
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+  }
+
+  h2{
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
 `

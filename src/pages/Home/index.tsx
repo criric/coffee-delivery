@@ -1,35 +1,40 @@
-import bannerCoffee from '../../assets/banner-coffee.png';
-import { HomeContainer, Banner, BannerContent, BannerAdvantagesContainer, BannerAdvantagesIcon } from './styles';
+import { useEffect, useState } from 'react';
+import { Banner } from './components/Banner';
+import { HomeContainer } from './styles';
+import { createServer } from 'miragejs';
+import coffeesData from '../../coffees.json'
+import { Coffee } from './components/Coffee';
+
+export type Coffees = {
+  id: number;
+  type: string[];
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  amount: number;
+}
+createServer({
+  routes(){
+    this.get('/api/coffees', () => {
+      return coffeesData
+    })
+  }
+})
 export function Home(){
+  const [coffees, setCoffees] = useState<Coffees[]>([])
+
+  useEffect(() => {
+    fetch('/api/coffees').then(response => response.json()).then(data => setCoffees(data))
+  }, [])
   return (
     <HomeContainer>
-      <Banner>
-        <BannerContent>
-          <h1>Encontre o café perfeito para qualquer hora do dia</h1>
-          <p>Com o Coffee Delivery você recebe seu café onde estiver, a qualquer hora</p>
-
-          <BannerAdvantagesContainer>
-            <div>
-              <BannerAdvantagesIcon />
-              <span></span>
-            </div>
-            <div>
-              <BannerAdvantagesIcon />
-              <span></span>
-            </div>
-            <div>
-              <BannerAdvantagesIcon />
-              <span></span>
-            </div>
-            <div>
-              <BannerAdvantagesIcon />
-              <span></span>
-            </div>
-          </BannerAdvantagesContainer>
-
-        </BannerContent>
-        <img src={bannerCoffee} alt="" />
-      </Banner>
+      <Banner />
+      <div>
+        {coffees.map(coffee => {
+          return <Coffee key={coffee.id} coffee={coffee}/>
+        })}
+      </div>
     </HomeContainer>
   )
 }

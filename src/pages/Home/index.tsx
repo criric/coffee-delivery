@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Banner } from './components/Banner';
 import { HomeContainer, CoffeeContainer, CoffeeActions, CoffeeItem, CoffeeDescription, CoffeeType, CoffeeAddToCart, CoffeeTypeList } from './styles';
 import { createServer } from 'miragejs';
 import coffeesData from '../../coffees.json'
 import { ShoppingCart } from '@phosphor-icons/react';
+import { CoffeesContext } from '../../contexts/CoffeesContext';
 
 export type Coffees = {
   id: number;
@@ -22,17 +23,7 @@ createServer({
   }
 })
 export function Home(){
-  const [coffees, setCoffees] = useState<Coffees[]>([])
-  const [coffeeAmount, setCoffeeAmount] = useState(1)
-
-  function handleCoffeeAmount(e){
-    const newCoffeeAmount = e.target.value
-    setCoffeeAmount(newCoffeeAmount)
-  }
-
-  useEffect(() => {
-    fetch('/api/coffees').then(response => response.json()).then(data => setCoffees(data))
-  }, [])
+  const { coffees, coffeeAmount, changeCoffeeAmount} = useContext(CoffeesContext)
 
   return (
     <HomeContainer>
@@ -67,7 +58,7 @@ export function Home(){
                     <h2>{coffee.price.toFixed(2)}</h2>
                   </div>
                   <div>
-                    <input type="number" min={1} value={coffeeAmount} onChange={handleCoffeeAmount}/>
+                    <input type="number" min={1} value={coffeeAmount} onChange={changeCoffeeAmount}/>
                     <CoffeeAddToCart>
                       <ShoppingCart size={24} weight='fill'/>
                     </CoffeeAddToCart>

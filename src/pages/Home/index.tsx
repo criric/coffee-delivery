@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { Banner } from './components/Banner';
 import { HomeContainer, CoffeeContainer, CoffeeActions, CoffeeItem, CoffeeDescription, CoffeeType, CoffeeAddToCart, CoffeeTypeList } from './styles';
-import { createServer } from 'miragejs';
-import coffeesData from '../../coffees.json'
 import { ShoppingCart } from '@phosphor-icons/react';
 import { CoffeesContext } from '../../contexts/CoffeesContext';
 
@@ -15,15 +13,15 @@ export type Coffees = {
   image: string;
   amount: number;
 }
-createServer({
-  routes(){
-    this.get('/api/coffees', () => {
-      return coffeesData
-    })
-  }
-})
+
 export function Home(){
-  const { coffees, coffeeAmount, changeCoffeeAmount} = useContext(CoffeesContext)
+  const { coffees, coffeeAmount, changeCoffeeAmount, getAllCoffees} = useContext(CoffeesContext)
+
+
+
+  useEffect(() => {
+    fetch('/api/coffees').then(response => response.json()).then(data => getAllCoffees(data))
+  }, [])
 
   return (
     <HomeContainer>
@@ -59,7 +57,7 @@ export function Home(){
                   </div>
                   <div>
                     <input type="number" min={1} value={coffeeAmount} onChange={changeCoffeeAmount}/>
-                    <CoffeeAddToCart>
+                    <CoffeeAddToCart type='button'>
                       <ShoppingCart size={24} weight='fill'/>
                     </CoffeeAddToCart>
                   </div>

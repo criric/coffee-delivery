@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Banner } from './components/Banner';
-import { HomeContainer, CoffeeContainer, CoffeeActions, CoffeeItem } from './styles';
+import { HomeContainer, CoffeeContainer, CoffeeActions, CoffeeItem, CoffeeDescription, CoffeeType, CoffeeAddToCart, CoffeeTypeList } from './styles';
 import { createServer } from 'miragejs';
 import coffeesData from '../../coffees.json'
+import { ShoppingCart } from '@phosphor-icons/react';
 
 export type Coffees = {
   id: number;
@@ -32,6 +33,7 @@ export function Home(){
   useEffect(() => {
     fetch('/api/coffees').then(response => response.json()).then(data => setCoffees(data))
   }, [])
+
   return (
     <HomeContainer>
       <Banner />
@@ -40,26 +42,36 @@ export function Home(){
         <CoffeeContainer>
           {coffees.map(coffee => {
             return (
-              <CoffeeItem>
-                {
-                  coffee.type 
-                  && 
-                  coffee.type.map((type) => {
-                    return <span>{type.toUpperCase()}</span>
-                  })
-                }
-                
-                <h2>
-                  {coffee.name}
-                </h2>
-                <p>
-                  {coffee.description}
-                </p>
+              <CoffeeItem key={coffee.id}>
+                <img src={coffee.image} alt="" />
+                <CoffeeTypeList>
+                  {
+                    coffee.type 
+                    && 
+                    coffee.type.map((type) => {
+                      return <CoffeeType key={type}>{type.toUpperCase()}</CoffeeType>
+                    })
+                  }
+                </CoffeeTypeList>
+                <CoffeeDescription>
+                  <h2>
+                    {coffee.name}
+                  </h2>
+                  <p>
+                    {coffee.description}
+                  </p>
+                </CoffeeDescription>
                 <CoffeeActions>
-                  <h3>R$</h3>
-                  <h2>{coffee.price.toFixed(2)}</h2>
-                  <input type="number" min={1} value={coffeeAmount} onChange={handleCoffeeAmount}/>
-                  <button>cart</button>
+                  <div>
+                    <span>R$</span>
+                    <h2>{coffee.price.toFixed(2)}</h2>
+                  </div>
+                  <div>
+                    <input type="number" min={1} value={coffeeAmount} onChange={handleCoffeeAmount}/>
+                    <CoffeeAddToCart>
+                      <ShoppingCart size={24} weight='fill'/>
+                    </CoffeeAddToCart>
+                  </div>
                 </CoffeeActions>
               </CoffeeItem>
             )

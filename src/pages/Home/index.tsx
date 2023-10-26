@@ -3,25 +3,21 @@ import { Banner } from './components/Banner';
 import { HomeContainer, CoffeeContainer, CoffeeActions, CoffeeItem, CoffeeDescription, CoffeeType, CoffeeAddToCart, CoffeeTypeList } from './styles';
 import { ShoppingCart } from '@phosphor-icons/react';
 import { CoffeesContext } from '../../contexts/CoffeesContext';
+import { Coffees } from '../../reducers/reducer';
 
-export type Coffees = {
-  id: number;
-  type: string[];
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  amount: number;
-}
+
 
 export function Home(){
-  const { coffees, coffeeAmount, changeCoffeeAmount, getAllCoffees} = useContext(CoffeesContext)
+  const { coffees, coffeeAmount, changeCoffeeAmount, getAllCoffees, addCoffeeToCart } = useContext(CoffeesContext)
 
+  function handleAddToCart(coffee: Coffees){
+    addCoffeeToCart(coffee)
+  }
 
 
   useEffect(() => {
     fetch('/api/coffees').then(response => response.json()).then(data => getAllCoffees(data))
-  }, [])
+  }, [getAllCoffees])
 
   return (
     <HomeContainer>
@@ -57,7 +53,7 @@ export function Home(){
                   </div>
                   <div>
                     <input type="number" min={1} value={coffeeAmount} onChange={changeCoffeeAmount}/>
-                    <CoffeeAddToCart type='button'>
+                    <CoffeeAddToCart type='button' onClick={() => handleAddToCart(coffee)}>
                       <ShoppingCart size={24} weight='fill'/>
                     </CoffeeAddToCart>
                   </div>
